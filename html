@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Calendar</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: grey;
+  }
+  .calendar {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .calendar table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .calendar th,
+  .calendar td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  .today {
+    background-color: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+<div class="calendar"></div>
+
+<script>
+function generateCalendar(year, month) {
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const lastDayIndex = new Date(year, month, daysInMonth).getDay();
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const calendarDiv = document.querySelector('.calendar');
+  let html = `
+    <h2>${monthNames[month]} ${year}</h2>
+    <table>
+      <tr>
+        ${weekdays.map(day => `<th>${day}</th>`).join('')}
+      </tr>
+  `;
+
+  let day = 1;
+  for (let i = 0; i < 6; i++) {
+    html += '<tr>';
+    for (let j = 0; j < 7; j++) {
+      if ((i === 0 && j < firstDayIndex) || (day > daysInMonth)) {
+        html += '<td></td>';
+      } else {
+        let classes = '';
+        if (day === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
+          classes = 'today';
+        }
+        html += `<td class="${classes}">${day}</td>`;
+        day++;
+      }
+    }
+    html += '</tr>';
+    if (day > daysInMonth) {
+      break;
+    }
+  }
+
+  html += '</table>';
+  calendarDiv.innerHTML = html;
+}
+
+// Get current date
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const currentMonth = currentDate.getMonth();
+
+// Generate calendar for current month
+generateCalendar(currentYear, currentMonth);
+</script>
+</body>
+</html>
